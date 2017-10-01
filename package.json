@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Raspberry Pi Smart Mirror",
   "main": "main.js",
-  "dependencies": {},
+  "dependencies": {
+    "electron-localshortcut": "^2.0.2"
+  },
   "devDependencies": {
     "electron": "1.7.8"
   },
