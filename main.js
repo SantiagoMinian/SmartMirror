@@ -10,9 +10,18 @@ function createWindow() {
     win = new BrowserWindow({ width: 800, height: 600, backgroundColor: "#000000", frame: false })
 
     shortcuts.register(win, "Return", () => {
+
         socket.send("Lorem Ipsum", (data) => {
-            console.log("DATA: " + data)
+            win.webContents.send("Message", {
+                msg: data
+            })
         })
+
+        win.loadURL(url.format({
+            pathname: path.join(__dirname, "public/html/register.html"),
+            protocol: "file:",
+            slashes: true
+        }))
     })
 
     win.setFullScreen(true)

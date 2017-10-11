@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="../css/main.css">
+
+    <script>
+        window.$ = window.jQuery = require("jquery")
+    </script>
+</head>
+<body>
+
+<div id="content"> Se le sacará una foto para registrarse</div>
+
+<script type="text/javascript">
+
+    const { ipcRenderer } = require("electron")
+    let msg = ""
+
+    ipcRenderer.on("Message", (event, props) => {
+        msg = props.msg
+    })
+
+    function showResponse() {
+
+        let content = $("#content")
+        content.text("")
+        if (msg === "No faces detected") {
+            content.text("Se encuentra muy lejos, por favor acerquese")
+        }
+        if (msg.substr(0, 9) === "Face known") {
+            content.text("Bienvenido")
+        }
+    }
+
+    // Countdown
+    let count = 3
+
+    function updateTimer() {
+        let content = $("#content")
+
+        if (count > 0) {
+
+            content.fadeOut("slow", function () {
+                content.text(count)
+                content.fadeIn()
+                count--
+            })
+        }
+        else if (count === 0) {
+            content.fadeOut("slow", function () {
+                content.text("¡Foto!")
+                content.fadeIn()
+                count--
+            })
+        }
+        else {
+            content.text("")
+            showResponse()
+        }
+    }
+
+    if (count > 0) setInterval(function () {
+        updateTimer()
+    }, 1000)
+
+</script>
+
+</body>
+</html>
