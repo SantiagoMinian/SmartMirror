@@ -17,7 +17,7 @@ function createWindow() {
         }))
     })
 
-    win.setFullScreen(true)
+    //win.setFullScreen(true)
 
     win.loadURL(url.format({
         pathname: path.join(__dirname, "public/html/index.html"),

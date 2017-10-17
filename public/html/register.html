@@ -11,6 +11,8 @@
 </head>
 <body>
 
+<div id="flash"
+     style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; background-color: white; display: none"></div>
 <div id="content"> Se le sacará una foto para registrarse</div>
 
 <script type="text/javascript">
@@ -39,6 +41,7 @@
 
     function updateTimer() {
         let content = $("#content")
+        let flashDiv = $("#flash")
 
         if (count > 0) {
 
@@ -50,22 +53,19 @@
         }
         else if (count === 0) {
             content.fadeOut("slow", function () {
-                content.text("¡Foto!")
-                content.fadeIn()
+                content.text(" ")
 
                 socket.send("Capture", (data) => {
                     message = String(data)
-                })
 
-                count--
-            })
-        }
-        else {
-            content.fadeOut("slow", function () {
-                content.text("")
-                showResponse()
-                content.fadeIn()
-                clearInterval(interval)
+                    flashDiv.show()
+                    flashDiv.fadeOut("slow", function () {
+
+                        showResponse()
+                        content.fadeIn()
+                        clearInterval(interval)
+                    })
+                })
             })
         }
     }
