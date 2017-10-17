@@ -15,22 +15,22 @@
 
 <script type="text/javascript">
 
-    const { ipcRenderer } = require("electron")
-    let msg = ""
+    const socket = require("./../../sockets/socket.js")
 
-    ipcRenderer.on("Message", (event, props) => {
-        msg = props.msg
-    })
+    let message = ""
 
     function showResponse() {
 
         let content = $("#content")
-        content.text("")
-        if (msg === "No faces detected") {
+
+        if (message === "No faces detected") {
             content.text("Se encuentra muy lejos, por favor acerquese")
-        }
-        if (msg.substr(0, 9) === "Face known") {
-            content.text("Bienvenido")
+        }else{
+            let splitMessage = message.split(" ")
+            if(splitMessage[0] === "Known")
+                content.text("Bienvenido " + splitMessage[splitMessage.length - 1])
+            if(splitMessage[0] === "Unknown")
+                content.text("Se ha registrado exitosamente como " + splitMessage[splitMessage.length - 1])
         }
     }
 
@@ -52,16 +52,25 @@
             content.fadeOut("slow", function () {
                 content.text("¡Foto!")
                 content.fadeIn()
+
+                socket.send("Capture", (data) => {
+                    message = String(data)
+                })
+
                 count--
             })
         }
         else {
-            content.text("")
-            showResponse()
+            content.fadeOut("slow", function () {
+                content.text("")
+                showResponse()
+                content.fadeIn()
+                clearInterval(interval)
+            })
         }
     }
 
-    if (count > 0) setInterval(function () {
+    let interval = setInterval(function () {
         updateTimer()
     }, 1000)
 
