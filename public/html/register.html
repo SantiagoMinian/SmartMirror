@@ -13,6 +13,7 @@
 
 <div id="flash"
      style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; background-color: white; display: none"></div>
+
 <div id="content"> Se le sacará una foto para registrarse</div>
 
 <script type="text/javascript">
@@ -26,12 +27,13 @@
         let content = $("#content")
 
         if (message === "No faces detected") {
-            content.text("Se encuentra muy lejos, por favor acerquese")
-        }else{
+            content.html("<p>Se encuentra muy lejos, por favor acerquese.</p>" +
+                "<p>Presione el boton para registrarse de nuevo</p>")
+        } else {
             let splitMessage = message.split(" ")
-            if(splitMessage[0] === "Known")
-                content.text("Bienvenido " + splitMessage[splitMessage.length - 1])
-            if(splitMessage[0] === "Unknown")
+            if (splitMessage[0] === "Known")
+                content.text("La concha de tu madre Allboys " + splitMessage[splitMessage.length - 1])
+            if (splitMessage[0] === "Unknown")
                 content.text("Se ha registrado exitosamente como " + splitMessage[splitMessage.length - 1])
         }
     }
@@ -64,6 +66,12 @@
                         showResponse()
                         content.fadeIn()
                         clearInterval(interval)
+//
+//                        setTimeout(function () {
+//                            content.fadeOut("slow", function () {
+//                                window.location.replace("index.html")
+//                            })
+//                        }, 4000)
                     })
                 })
             })
