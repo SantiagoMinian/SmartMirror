@@ -13,6 +13,7 @@ module.exports = {
 
         socket.on("data", (data) => {
             callback(data)
+            socket.write("End")
             socket.destroy()
         })
     }
