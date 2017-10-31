@@ -4,9 +4,78 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <link rel="stylesheet" href="../css/main.css">
+
+    <script>
+        window.$ = window.jQuery = require("jquery")
+    </script>
 </head>
 <body>
 <h1>¡Bienvenidos!</h1>
+
+<p> Se busca </p>
+
+<div id="imageContainer">
+
+</div>
+
+<script type="text/javascript">
+
+    let container = $("#imageContainer")
+    let index = 0
+
+    setInterval(function () {
+        updateWinners()
+    }, 5000)
+
+    function updateWinners() {
+
+        const MongoClient = require('mongodb').MongoClient;
+        const url = "mongodb://localhost:27017/facer";
+
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            const query = {  };
+            db.collection("winners").find(query).toArray(function(err, result) {
+                if (err) throw err;
+                console.log(result)
+                db.close();
+
+                container.empty()
+                unaForma(result)
+                // otraForma(result)
+            });
+        });
+    }
+
+    function getPath(r) {
+        let photoFolderPath = "../../../../Python/Facer/";
+        return photoFolderPath + r.path
+    }
+
+    function addPhoto(path) {
+        let im = '<img src=\"' + path + '\" style="width:100px;height:100px; padding-left: 10px">'
+
+        container.append(im)
+    }
+
+    function unaForma(result) {
+        for (let i = 0 ; i < result.length ; i++){
+
+            let path = getPath(result[i])
+            addPhoto(path)
+        }
+    }
+
+    function otraForma(result) {
+        let path = getPath(result[index])
+
+        container.append('<img src=\"' + path + '\" style="width:200px;height:200px;">')
+
+        if(index < result.length - 1) index++
+        else index = 0
+    }
+
+</script>
 
 </body>
 </html>

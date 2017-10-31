@@ -26,16 +26,18 @@
 
         let content = $("#content")
 
-        if (message === "No faces detected") {
-            content.html("<p>Se encuentra muy lejos, por favor acerquese.</p>" +
-                "<p>Presione el boton para registrarse de nuevo</p>")
-        } else {
-            let splitMessage = message.split(" ")
-            if (splitMessage[0] === "Known")
-                content.text("Hola de nuevo " + splitMessage[splitMessage.length - 1])
-            if (splitMessage[0] === "Unknown")
-                content.text("Se ha registrado exitosamente como " + splitMessage[splitMessage.length - 1])
-        }
+        content.text(message)
+
+//        if (message === "No faces detected") {
+//            content.html("<p>Se encuentra muy lejos, por favor acerquese.</p>" +
+//                "<p>Presione el boton para registrarse de nuevo</p>")
+//        } else {
+//            let splitMessage = message.split(" ")
+//            if (splitMessage[0] === "Known")
+//                content.text("Hola de nuevo " + splitMessage[splitMessage.length - 1])
+//            if (splitMessage[0] === "Unknown")
+//                content.text("Se ha registrado exitosamente como " + splitMessage[splitMessage.length - 1])
+//        }
     }
 
     // Countdown
@@ -45,6 +47,12 @@
         let content = $("#content")
         let flashDiv = $("#flash")
 
+        if (count === 3) {
+            socket.send("Capture", (data) => {
+                message = String(data)
+            })
+
+        }
         if (count > 0) {
 
             content.fadeOut("slow", function () {
@@ -56,23 +64,19 @@
         else if (count === 0) {
             content.fadeOut("slow", function () {
                 content.text(" ")
-                clearInterval(interval)
-                socket.send("Capture", (data) => {
-                    message = String(data)
 
-                    flashDiv.show()
-                    flashDiv.fadeOut("slow", function () {
+                flashDiv.show()
+                flashDiv.fadeOut("slow", function () {
 
-                        showResponse()
-                        content.fadeIn()
-
-                        setTimeout(function () {
-                            content.fadeOut("slow", function () {
-                                window.location.replace("index.html")
-                            })
-                        }, 4000)
-                    })
+                    content.fadeIn()
+                    showResponse()
+                    setTimeout(function () {
+                        content.fadeOut("slow", function () {
+                            window.location.replace("index.html")
+                        })
+                    }, 4000)
                 })
+                clearInterval(interval)
             })
         }
     }
